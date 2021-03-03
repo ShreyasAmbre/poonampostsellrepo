@@ -1,0 +1,7 @@
+{
+  "name": "poonampostsell",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
