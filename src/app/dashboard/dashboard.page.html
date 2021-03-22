@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar  color="primary" slots="start">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Dashboard</ion-title>
+    <app-notification></app-notification>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h4>{{noti_data}}</h4>
+
+  <ion-card>
+    <div class="ie" [chart]="chart"></div>
+  </ion-card>
+  <ion-card>
+    <div class="ie" [chart]="chart2"></div>
+  </ion-card>
+  <ion-card>
+    <div class="ie" [chart]="chart3"></div>
+  </ion-card>
+  <ion-card>
+    <div class="ie" [chart]="chart4"></div>
+  </ion-card>
+</ion-content>

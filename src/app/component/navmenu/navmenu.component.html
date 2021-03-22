@@ -1,0 +1,49 @@
+<ion-menu side="start" menuId="first" contentId="content1">
+  <ion-header>
+    <ion-toolbar>
+      <div class="menu-header-bg"></div>
+      <div class="header-content">
+        <img src="../../../assets/icon/avatar.png" alt="">
+        <ion-label>
+          <b><h1>Shreyas Ambre</h1></b>
+          <p>Software Developer</p>
+        </ion-label>
+      </div>
+      <!-- <div class="action-button">
+        <ion-button>
+          <ion-icon slot="start" name="add"></ion-icon>Profile
+        </ion-button>
+      </div> -->
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list *ngFor="let pages of navigate">
+      <ion-menu-toggle auto-hide="true" *ngIf="!pages.children">
+        <ion-item [routerLink]="pages.url">
+            <ion-icon [name]="pages.icon" slot="start"></ion-icon>
+            <ion-label>{{pages.title}}</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+
+
+      <!-- Below code is all about sub menus -->
+      <ion-item button *ngIf="pages.children?.length > 0" (click)="pages.open = !pages.open"
+        [class.active-parent]="pages.open" detail="true">
+        <ion-icon slot="start" name="arrow-forward" *ngIf="!pages.open"></ion-icon>
+        <ion-icon slot="start" name="arrow-down" *ngIf="pages.open"></ion-icon>
+        <ion-label>{{pages.title}}</ion-label>
+      </ion-item>
+
+      <ion-list *ngIf="pages.open">
+        <ion-menu-toggle auto-hide="true">
+          <ion-item *ngFor="let sub of pages.children" [routerLink]="sub.url">
+              <ion-icon [name]="sub.icon" slot="start"></ion-icon>
+                {{sub.title}}
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-list>
+
+  </ion-content>
+</ion-menu>
+<ion-router-outlet id="content1"></ion-router-outlet>

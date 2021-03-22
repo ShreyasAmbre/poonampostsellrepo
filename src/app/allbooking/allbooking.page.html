@@ -1,0 +1,142 @@
+<ion-header>
+  <ion-toolbar  color="primary" slots="start">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>All Bookings</ion-title>
+
+    <!-- <app-notification></app-notification> -->
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <!-- <ion-searchbar animated="true" [(ngModel)]="searchTerm" (ionChange)="filterItems(searchTerm)" placeholder="Search Customer Booking" inputmode="numeric"></ion-searchbar> -->
+
+  <!-- Search Form  -->
+
+  <ion-card id="search_form_container" *ngIf="search_form_status">
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">Search Form</ion-card-title>
+    </ion-card-header>
+    
+    <ion-card-content >
+      <ion-item>
+        <ion-label>Select Property:-</ion-label>
+        <ion-select [(ngModel)]="selected_project" name="selected_project" (ionChange)="get_wing_floor_unit(selected_project)" okText="Okay" cancelText="Dismiss">
+          <ion-select-option *ngFor="let item of project_master" [value]="item.project_id">{{item.project_name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Select Wing:-</ion-label>
+        <ion-select [(ngModel)]="selected_wing" name="selected_wing" okText="Okay" cancelText="Dismiss">
+          <ion-select-option *ngFor="let item of wings_api_data" [value]="item.wingName">{{item.wingName}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Select Floor:-</ion-label>
+        <ion-select [(ngModel)]="selected_floor" name="selected_floor" okText="Okay" cancelText="Dismiss">
+          <ion-select-option *ngFor="let item of floors_api_data" [value]="item.floor">{{item.floor}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Select Unit:-</ion-label>
+        <ion-select [(ngModel)]="selected_unit" name="selected_unit" okText="Okay" cancelText="Dismiss">
+          <ion-select-option *ngFor="let item of units_api_data" [value]="item.unit_type">{{item.unit_type}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Select Broker:-</ion-label>
+        <ion-select [(ngModel)]="selected_broker" name="selected_broker" okText="Okay" cancelText="Dismiss">
+          <ion-select-option *ngFor="let item of broker_master" [value]="item.broker_id">{{item.brokerName}}</ion-select-option>
+        </ion-select>
+      </ion-item><br>
+
+      <ion-button type="button" (click)="fetchallbookings()" expand="block" solid large >Fetch</ion-button><br>
+      <ion-button type="button" expand="block" solid large >Analytics</ion-button><br>
+    </ion-card-content>
+  </ion-card>
+
+  <div *ngIf="booking_list_cards">
+    <ion-searchbar [(ngModel)]="searchTerm" (ionChange)="filterItems(searchTerm)" placeholder="Search Bookings"></ion-searchbar>
+    <div *ngIf="booking_OGList"  >
+      <div *ngFor="let item of all_bookings; let i = index" >
+        <ion-item lines="none" [routerLink]="['detailbooking', item.apartment_id]">
+          <ion-card class="booking_card" id="bookingcard">
+            <ion-item class="ion-text-center">
+              <ion-label><b>{{item.salutation}} {{item.first_name}} {{item.last_name}} </b></ion-label>
+            </ion-item>
+            
+            <ion-card-content>
+              <ion-icon name="business-outline" class="allbookingsicons"  size="large"></ion-icon> 
+              <p class="allbookingsclients" >{{item.buildingName}}</p><br>
+              <ion-icon name="home-outline" class="allbookingsicons"   size="large"></ion-icon>
+              <p class="allbookingsclients" >{{item.flatNo}} - {{item.wingName }}</p><br>
+              <ion-icon name="layers-outline" class="allbookingsicons"  size="large"></ion-icon>
+              <p class="allbookingsclients" > Floor :{{item.floor}}</p><br>
+            </ion-card-content>
+            
+            <ion-item>
+              <ion-icon style="padding: 10px; color:blue" name="call-outline"></ion-icon>
+              <ion-label><b>+91 8149421528</b></ion-label>
+              <ion-icon style="padding: 10px; color:blue" name="chevron-forward"></ion-icon>
+            </ion-item>
+          </ion-card>
+        </ion-item>
+        </div>
+      </div>
+
+    <div *ngIf="booking_FList">
+      <div *ngFor="let item of filter_all_booking; let i = index" >
+        <ion-item lines="none">
+          <ion-card class="booking_card" id="bookingcard">
+            <ion-item class="ion-text-center">
+              <ion-label><b>{{item.salutation}} {{item.first_name}} {{item.last_name}} </b></ion-label>
+            </ion-item>
+            
+            <ion-card-content>
+              <ion-icon name="business-outline" class="allbookingsicons"  size="large"></ion-icon> 
+              <p class="allbookingsclients" >{{item.buildingName}}</p><br>
+              <ion-icon name="home-outline" class="allbookingsicons"   size="large"></ion-icon>
+              <p class="allbookingsclients" >{{item.flatNo}} - {{item.wingName }}</p><br>
+              <ion-icon name="layers-outline" class="allbookingsicons"  size="large"></ion-icon>
+              <p class="allbookingsclients" > Floor :{{item.floor}}</p><br>
+            </ion-card-content>
+            
+            <ion-item>
+              <ion-icon style="padding: 10px; color:blue" name="call-outline"></ion-icon>
+              <ion-label><b>+91 8149421528</b></ion-label>
+              <ion-icon style="padding: 10px; color:blue" name="chevron-forward"></ion-icon>
+            </ion-item>
+          </ion-card>
+        </ion-item>
+        </div>
+    </div>
+  </div>
+    
+
+  <ion-infinite-scroll threshold="15%" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button><ion-icon name="add"></ion-icon></ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button>
+        <ion-icon (click)="opensearchform()" color="primary" name="search"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button routerLink="/booking">
+        <ion-icon name="document" color="primary"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+</ion-content>
